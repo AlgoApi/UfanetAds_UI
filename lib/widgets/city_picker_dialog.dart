@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import '../models/city.dart';
 
 class CityPickerDialog extends StatefulWidget {
-  final List<String> allCities;
-  final String? selectedCity;
+  final List<City> allCities;
+  final int? selectedCity;
 
   const CityPickerDialog({
     super.key,
@@ -15,8 +16,7 @@ class CityPickerDialog extends StatefulWidget {
 }
 
 class _CityPickerDialogState extends State<CityPickerDialog> {
-  late List<String> _filteredCities;
-  String _searchCityText = '';
+  late List<City> _filteredCities;
 
   @override
   void initState() {
@@ -26,9 +26,8 @@ class _CityPickerDialogState extends State<CityPickerDialog> {
 
   void _filterCities(String text) {
     setState(() {
-      _searchCityText = text;
       _filteredCities = widget.allCities
-          .where((c) => c.toLowerCase().contains(text.trim().toLowerCase()))
+          .where((c) => c.name.toLowerCase().contains(text.trim().toLowerCase()))
           .toList();
     });
   }
@@ -64,17 +63,18 @@ class _CityPickerDialogState extends State<CityPickerDialog> {
                 itemCount: _filteredCities.length,
                 separatorBuilder: (ctx, idx) => const Divider(height: 1),
                 itemBuilder: (ctx, idx) {
-                  final city = _filteredCities[idx];
+                  final city = _filteredCities[idx].name;
+                  final id = _filteredCities[idx].id;
                   return ListTile(
                     title: Text(city),
-                    trailing: widget.selectedCity == city
+                    trailing: widget.selectedCity == id
                         ? const Icon(
                       Icons.check,
                       color: Colors.blue,
                     )
                         : null,
                     onTap: () {
-                      Navigator.of(context).pop(city);
+                      Navigator.of(context).pop(_filteredCities[idx]);
                     },
                   );
                 },

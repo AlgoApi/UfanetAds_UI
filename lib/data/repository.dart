@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import '../models/category.dart';
 import '../models/offer.dart';
+import '../models/city.dart';
+import 'api_client.dart';
+
+import 'auth_storage.dart';
 
 class Repository {
   Future<Map<String, dynamic>> loadData() async {
@@ -27,47 +30,63 @@ class Repository {
 /// server return <= 5 offers и категории связанные с ними
 ///
 class Repository2 {
-  static const String _baseUrl = 'https://laboba.com/api/offers';
 
-  Future<List<String>> fetchCities() async {
-    final uri = Uri.parse('$_baseUrl/cities');
-    final response = await http.get(uri);
+  Future<List<City>> fetchCities() async {
+    final uri = Uri.parse('/cities');
+
+    final response = await ApiClient.instance.get(uri);
     if (response.statusCode != 200) {
       throw Exception('Failed to load cities: ${response.statusCode}');
     }
-    final data = json.decode(response.body) as List<dynamic>;
-    return data.map((e) => e as String).toList();
+    final decoded = json.decode(response.body) as List<dynamic>;
+    final data = decoded
+        .map((e) => City.fromJson(e))
+        .toList();
+    return data;
   }
 
-  Future<Map<String, dynamic>> fetchOffers({
-    required int offset,
-    required String city,
-    int? categoryId,
-  }) async {
-    final uri = Uri.parse(_baseUrl).replace(queryParameters: {
-      'offset': offset.toString(),
-      'city': city,
-      if (categoryId != null) 'categoryId': categoryId.toString(),
-    });
+  Future<List<Category>> fetchCategories() async {
+    final uri = Uri.parse("/categories");
 
-    final response = await http.get(uri);
+    final response = await ApiClient.instance.get(uri);
     if (response.statusCode != 200) {
       throw Exception('Failed to fetch data: ${response.statusCode}');
     }
 
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    // В data должны быть «categories» и «offers»
-    final catsJson = data['categories'] as List<dynamic>;
-    final offersJson = data['offers'] as List<dynamic>;
+    final catsJson = json.decode(response.body) as List<dynamic>;
+    final data = catsJson
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+    return data.map((e) => Category.fromJson(e)).toList();
+  }
 
-    final categories =
-    catsJson.map((e) => Category.fromJson(e as Map<String, dynamic>)).toList();
-    final offers =
-    offersJson.map((e) => Offer.fromJson(e as Map<String, dynamic>)).toList();
+  Future<List<Offer>> fetchOffers({
+    required int offset,
+    required int city,
+    required int categoryId,
+  }) async {
+    final uri = Uri.parse("/offers").replace(queryParameters: {
+      'offset': offset.toString(),
+      'city_id': city.toString(),
+      'category_id': categoryId.toString(),
+    });
 
-    return {
-      'categories': categories,
-      'offers': offers,
-    };
+    final response = await ApiClient.instance.get(uri);
+    if (response.statusCode != 200) {
+      throw Exception('Failed to fetch data: ${response.statusCode}');
+    }
+
+    final accessToken = response.headers["x-access-token"];
+    if (accessToken != null){
+      await AuthStorage().saveToken(accessToken);
+    }
+
+    final offersJson = json.decode(response.body) as List<dynamic>;
+    final data = offersJson
+        .map((e) => e as Map<String, dynamic>)
+        .toList();
+    final offers = data.map((e) => Offer.fromJson(e)).toList();
+
+    return offers;
   }
 }

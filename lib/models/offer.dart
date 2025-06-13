@@ -4,8 +4,8 @@ class Offer {
   final String description;
   final String companyName;
   final String companyLogoUrl;
-  final int categoryId;
-  final String city;
+  final int? categoryId;
+  final int cityId;
   final String backgroundImageUrl;
 
   String? categoryName;
@@ -16,8 +16,8 @@ class Offer {
     required this.description,
     required this.companyName,
     required this.companyLogoUrl,
-    required this.categoryId,
-    required this.city,
+    this.categoryId,
+    required this.cityId,
     required this.backgroundImageUrl,
   });
 
@@ -27,8 +27,8 @@ class Offer {
     description: json['description'],
     companyName: json['companyName'],
     companyLogoUrl: json['companyLogoUrl'],
-    categoryId: json['categoryId'],
-    city: json['city'],
+    categoryId: json['category_id'],
+    cityId: json['city_id'],
     backgroundImageUrl: json['backgroundImageUrl'],
   );
 }

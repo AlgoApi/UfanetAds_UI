@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import '../models/offer.dart';
+import '../models/category.dart';
 
 class OfferTile extends StatelessWidget {
   final Offer offer;
+  final Category category;
 
-  const OfferTile({super.key, required this.offer});
+  const OfferTile({super.key, required this.offer, required this.category});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 120,
+      height: 250,
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.hardEdge,
-      child: Row(
+      child: Column(
         children: [
           Expanded(
             flex: 7,
@@ -34,8 +36,8 @@ class OfferTile extends StatelessWidget {
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
-                        Colors.black.withOpacity(0.0),
-                        Colors.black.withOpacity(0.6)
+                        Colors.black.withValues(alpha: 0.0),
+                        Colors.black.withValues(alpha: 0.6)
                       ],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -100,7 +102,7 @@ class OfferTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Категория: ${offer.categoryName}',
+                          'Категория: ${category.name}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

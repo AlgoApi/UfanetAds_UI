@@ -32,6 +32,9 @@ dependencies:
     sdk: flutter
 
   http: ^1.4.0
+  fkafka: ^2.0.3
+  flutter_secure_storage: ^9.2.4
+  flutter_dotenv: ^5.2.1
 
   # Для работы с JSON из assets
   flutter_localizations:
@@ -64,7 +67,9 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/.env
     - assets/data/offers.json
+    - lib/data/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

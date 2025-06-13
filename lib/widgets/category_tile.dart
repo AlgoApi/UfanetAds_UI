@@ -3,13 +3,11 @@ import '../models/category.dart';
 
 class CategoryTile extends StatelessWidget {
   final Category category;
-  final int count;
   final VoidCallback onTap;
 
   const CategoryTile({
     super.key,
     required this.category,
-    required this.count,
     required this.onTap,
   });
 
@@ -39,8 +37,8 @@ class CategoryTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      Colors.black.withOpacity(0.0),
-                      Colors.black.withOpacity(0.6)
+                      Colors.black.withValues(alpha: 0.0),
+                      Colors.black.withValues(alpha: 0.6)
                     ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -52,7 +50,7 @@ class CategoryTile extends StatelessWidget {
               bottom: 8,
               left: 8,
               child: Text(
-                '${category.name} ($count)',
+                '${category.name}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

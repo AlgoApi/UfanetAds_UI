@@ -8,6 +8,6 @@ class Category {
   factory Category.fromJson(Map<String, dynamic> json) => Category(
     id: json['id'],
     name: json['name'],
-    imageUrl: json['imageUrl'],
+    imageUrl: json['image_url'],
   );
 }
