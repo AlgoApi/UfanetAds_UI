@@ -167,6 +167,10 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _showCategories = true;
       });
+    } else {
+      setState(() {
+        _showCategories = false;
+      });
     }
   }
 
